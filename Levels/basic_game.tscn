@@ -1,0 +1,96 @@
+[gd_scene load_steps=11 format=3 uid="uid://b5jv3e8gj5je7"]
+
+[ext_resource type="PackedScene" uid="uid://c1baxxt8r3a7" path="res://Objects/Paddle.tscn" id="1_7x8ch"]
+[ext_resource type="Texture2D" uid="uid://dichrwvhg0kjn" path="res://Assets/circle.svg" id="1_lw5d6"]
+[ext_resource type="Script" path="res://Levels/Ball.gd" id="1_utoca"]
+[ext_resource type="Script" path="res://Objects/Goal.gd" id="4_3jxdw"]
+[ext_resource type="Script" path="res://Levels/BasicGameController.gd" id="5_al00a"]
+[ext_resource type="Script" path="res://Logic/SignalHelper.gd" id="6_p0r1m"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_i7db3"]
+friction = 0.0
+bounce = 1.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_oy1mo"]
+radius = 7.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wvkps"]
+size = Vector2(100, 400)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_m80t3"]
+size = Vector2(550, 20)
+
+[node name="BasicGame" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="CenterLine" type="Line2D" parent="CenterContainer"]
+points = PackedVector2Array(250, 0, 250, 300)
+width = 2.0
+
+[node name="HomePlayer" parent="CenterContainer" instance=ExtResource("1_7x8ch")]
+position = Vector2(450, 150)
+rotation = 3.14159
+
+[node name="VsPlayer" parent="CenterContainer" instance=ExtResource("1_7x8ch")]
+position = Vector2(50, 150)
+
+[node name="Ball" type="RigidBody2D" parent="CenterContainer" groups=["ball"]]
+position = Vector2(250, 150)
+physics_material_override = SubResource("PhysicsMaterial_i7db3")
+gravity_scale = 0.0
+script = ExtResource("1_utoca")
+
+[node name="Sprite2D" type="Sprite2D" parent="CenterContainer/Ball"]
+scale = Vector2(0.75, 0.75)
+texture = ExtResource("1_lw5d6")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CenterContainer/Ball"]
+shape = SubResource("CircleShape2D_oy1mo")
+
+[node name="HomeGoal" type="Area2D" parent="CenterContainer" groups=["goal"]]
+position = Vector2(550, 150)
+script = ExtResource("4_3jxdw")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CenterContainer/HomeGoal"]
+shape = SubResource("RectangleShape2D_wvkps")
+
+[node name="VsGoal" type="Area2D" parent="CenterContainer" groups=["goal"]]
+position = Vector2(-50, 150)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CenterContainer/VsGoal"]
+shape = SubResource("RectangleShape2D_wvkps")
+
+[node name="BoundaryCollisions" type="Node2D" parent="CenterContainer"]
+
+[node name="UpperBound" type="StaticBody2D" parent="CenterContainer/BoundaryCollisions" groups=["wall"]]
+position = Vector2(250, -10)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CenterContainer/BoundaryCollisions/UpperBound"]
+shape = SubResource("RectangleShape2D_m80t3")
+
+[node name="LowerBound" type="StaticBody2D" parent="CenterContainer/BoundaryCollisions" groups=["wall"]]
+position = Vector2(250, 310)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CenterContainer/BoundaryCollisions/LowerBound"]
+shape = SubResource("RectangleShape2D_m80t3")
+
+[node name="BasicGameController" type="Node" parent="CenterContainer"]
+script = ExtResource("5_al00a")
+
+[node name="SignalHelper" type="Node" parent="CenterContainer"]
+script = ExtResource("6_p0r1m")
+
+[connection signal="body_entered" from="CenterContainer/Ball" to="CenterContainer/Ball" method="_on_body_entered"]

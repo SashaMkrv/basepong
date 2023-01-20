@@ -1,0 +1,25 @@
+[gd_scene load_steps=4 format=3 uid="uid://c1baxxt8r3a7"]
+
+[ext_resource type="Script" path="res://Levels/Paddle.gd" id="1_wg6qd"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_11246"]
+friction = 0.0
+bounce = 1.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_60mwg"]
+size = Vector2(5, 75)
+
+[node name="Paddle" type="StaticBody2D" node_paths=PackedStringArray("direction") groups=["paddle"]]
+physics_material_override = SubResource("PhysicsMaterial_11246")
+script = ExtResource("1_wg6qd")
+direction = NodePath("RayCast2D")
+
+[node name="Polygon2D" type="Polygon2D" parent="."]
+polygon = PackedVector2Array(-2.695, 37, -2.5, -37.5, 2.5, -37.5, 2.5, 37)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_60mwg")
+
+[node name="RayCast2D" type="RayCast2D" parent="."]
+enabled = false
+target_position = Vector2(20, 0)
