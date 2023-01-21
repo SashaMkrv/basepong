@@ -2,18 +2,29 @@ extends Node
 class_name BasicGameController
 
 @export
+var home_player : PlayerData
+@export
+var visiting_player : PlayerData
+
+@export
 var signalHelper : SignalHelper
+
+@export
+var goalGiver : BasicGoalProvider
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	pass # Replace with function body.
+	signalHelper.goal_for_key.connect(goal_scored_on)
 
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
-	pass
+func goal_scored_on(goal_key : String):
+	match(goal_key):
+		"visiting":
+			give_goal_to(home_player)
+		"home":
+			give_goal_to(visiting_player)
 
 
-func on_goal(goalArea: Goal):
-	signalHelper.emit_goal_for_key(goalArea.goal_key)
+func give_goal_to(player : PlayerData):
+	goalGiver.give_player_goal(player)

@@ -1,11 +1,15 @@
-[gd_scene load_steps=11 format=3 uid="uid://b5jv3e8gj5je7"]
+[gd_scene load_steps=14 format=3 uid="uid://b5jv3e8gj5je7"]
 
 [ext_resource type="PackedScene" uid="uid://c1baxxt8r3a7" path="res://Objects/Paddle.tscn" id="1_7x8ch"]
 [ext_resource type="Texture2D" uid="uid://dichrwvhg0kjn" path="res://Assets/circle.svg" id="1_lw5d6"]
+[ext_resource type="PackedScene" uid="uid://6oy64klx2jw4" path="res://UI/ScoreUI.tscn" id="1_mhm41"]
 [ext_resource type="Script" path="res://Levels/Ball.gd" id="1_utoca"]
-[ext_resource type="Script" path="res://Objects/Goal.gd" id="4_3jxdw"]
+[ext_resource type="Resource" uid="uid://cxqnapr0hvn6e" path="res://Levels/BasicLevelPlayers/VisitingPlayerData.tres" id="2_bbnqj"]
+[ext_resource type="Resource" uid="uid://c5i0uywjejlv0" path="res://Levels/BasicLevelPlayers/HomePlayerData.tres" id="3_xp3gn"]
 [ext_resource type="Script" path="res://Levels/BasicGameController.gd" id="5_al00a"]
+[ext_resource type="PackedScene" uid="uid://chicsk124m0bv" path="res://Objects/Goal.tscn" id="6_osljp"]
 [ext_resource type="Script" path="res://Logic/SignalHelper.gd" id="6_p0r1m"]
+[ext_resource type="Script" path="res://Logic/BasicGoalProvider.gd" id="9_wpinb"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_i7db3"]
 friction = 0.0
@@ -13,9 +17,6 @@ bounce = 1.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_oy1mo"]
 radius = 7.0
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_wvkps"]
-size = Vector2(100, 400)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_m80t3"]
 size = Vector2(550, 20)
@@ -28,69 +29,100 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="CenterContainer" type="CenterContainer" parent="."]
+[node name="Scores" type="HBoxContainer" parent="."]
 layout_mode = 1
-anchors_preset = 15
+anchors_preset = 10
 anchor_right = 1.0
-anchor_bottom = 1.0
+offset_bottom = 67.0
 grow_horizontal = 2
-grow_vertical = 2
+alignment = 1
 
-[node name="CenterLine" type="Line2D" parent="CenterContainer"]
+[node name="MarginContainer2" type="MarginContainer" parent="Scores"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+
+[node name="CenterContainer" type="CenterContainer" parent="Scores/MarginContainer2"]
+layout_mode = 2
+
+[node name="Versus" parent="Scores/MarginContainer2/CenterContainer" instance=ExtResource("1_mhm41")]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 2.0
+player_data = ExtResource("2_bbnqj")
+
+[node name="MarginContainer" type="MarginContainer" parent="Scores"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+
+[node name="CenterContainer" type="CenterContainer" parent="Scores/MarginContainer"]
+layout_mode = 2
+
+[node name="Player" parent="Scores/MarginContainer/CenterContainer" instance=ExtResource("1_mhm41")]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 2.0
+player_data = ExtResource("3_xp3gn")
+
+[node name="CenterLine" type="Line2D" parent="."]
 points = PackedVector2Array(250, 0, 250, 300)
 width = 2.0
 
-[node name="HomePlayer" parent="CenterContainer" instance=ExtResource("1_7x8ch")]
+[node name="HomePlayer" parent="." instance=ExtResource("1_7x8ch")]
 position = Vector2(450, 150)
 rotation = 3.14159
 
-[node name="VsPlayer" parent="CenterContainer" instance=ExtResource("1_7x8ch")]
+[node name="VsPlayer" parent="." instance=ExtResource("1_7x8ch")]
 position = Vector2(50, 150)
 
-[node name="Ball" type="RigidBody2D" parent="CenterContainer" groups=["ball"]]
+[node name="Ball" type="RigidBody2D" parent="." groups=["ball"]]
 position = Vector2(250, 150)
 physics_material_override = SubResource("PhysicsMaterial_i7db3")
 gravity_scale = 0.0
 script = ExtResource("1_utoca")
 
-[node name="Sprite2D" type="Sprite2D" parent="CenterContainer/Ball"]
+[node name="Sprite2D" type="Sprite2D" parent="Ball"]
 scale = Vector2(0.75, 0.75)
 texture = ExtResource("1_lw5d6")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="CenterContainer/Ball"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Ball"]
 shape = SubResource("CircleShape2D_oy1mo")
 
-[node name="HomeGoal" type="Area2D" parent="CenterContainer" groups=["goal"]]
+[node name="HomeGoal" parent="." instance=ExtResource("6_osljp")]
 position = Vector2(550, 150)
-script = ExtResource("4_3jxdw")
+goal_key = "home"
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="CenterContainer/HomeGoal"]
-shape = SubResource("RectangleShape2D_wvkps")
-
-[node name="VsGoal" type="Area2D" parent="CenterContainer" groups=["goal"]]
+[node name="VisitingGoal" parent="." instance=ExtResource("6_osljp")]
 position = Vector2(-50, 150)
+goal_key = "visiting"
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="CenterContainer/VsGoal"]
-shape = SubResource("RectangleShape2D_wvkps")
+[node name="BoundaryCollisions" type="Node2D" parent="."]
 
-[node name="BoundaryCollisions" type="Node2D" parent="CenterContainer"]
-
-[node name="UpperBound" type="StaticBody2D" parent="CenterContainer/BoundaryCollisions" groups=["wall"]]
+[node name="UpperBound" type="StaticBody2D" parent="BoundaryCollisions" groups=["wall"]]
 position = Vector2(250, -10)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="CenterContainer/BoundaryCollisions/UpperBound"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BoundaryCollisions/UpperBound"]
 shape = SubResource("RectangleShape2D_m80t3")
 
-[node name="LowerBound" type="StaticBody2D" parent="CenterContainer/BoundaryCollisions" groups=["wall"]]
+[node name="LowerBound" type="StaticBody2D" parent="BoundaryCollisions" groups=["wall"]]
 position = Vector2(250, 310)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="CenterContainer/BoundaryCollisions/LowerBound"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BoundaryCollisions/LowerBound"]
 shape = SubResource("RectangleShape2D_m80t3")
 
-[node name="BasicGameController" type="Node" parent="CenterContainer"]
+[node name="BasicGameController" type="Node" parent="." node_paths=PackedStringArray("signalHelper")]
 script = ExtResource("5_al00a")
+home_player = ExtResource("3_xp3gn")
+visiting_player = ExtResource("2_bbnqj")
+signalHelper = NodePath("../SignalHelper")
 
-[node name="SignalHelper" type="Node" parent="CenterContainer"]
+[node name="SignalHelper" type="Node" parent="."]
 script = ExtResource("6_p0r1m")
 
-[connection signal="body_entered" from="CenterContainer/Ball" to="CenterContainer/Ball" method="_on_body_entered"]
+[node name="GameReset" type="Node" parent="."]
+
+[node name="GoalGiver" type="Node" parent="."]
+script = ExtResource("9_wpinb")
+
+[connection signal="body_entered" from="Ball" to="Ball" method="_on_body_entered"]

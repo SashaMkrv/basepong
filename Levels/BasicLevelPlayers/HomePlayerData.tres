@@ -1,0 +1,8 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://c5i0uywjejlv0"]
+
+[ext_resource type="Script" path="res://PlayerData.gd" id="1_qguj4"]
+
+[resource]
+script = ExtResource("1_qguj4")
+player_name = "Home"
+score = 0
