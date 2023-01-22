@@ -5,7 +5,7 @@ class_name Paddle
 var direction : RayCast2D
 
 @export
-var speed : float = 20
+var speed : float = 40
 
 # Returns the angle of the paddle direction from 0,1 in radians
 func get_direction() -> float:
@@ -13,7 +13,8 @@ func get_direction() -> float:
 
 
 func move_toward(position: Vector2) -> void:
-	var target = project_to_movement_axis(position).normalized()
+	var relative_position = position - global_position
+	var target = project_to_movement_axis(relative_position).normalized()
 	velocity = target
 
 

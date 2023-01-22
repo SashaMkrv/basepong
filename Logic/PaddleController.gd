@@ -14,4 +14,4 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _physics_process(delta):
-	paddle.move_toward(ball.position)
+	paddle.move_toward(ball.global_position)
