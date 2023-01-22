@@ -4,7 +4,7 @@ class_name Ball
 @export
 var speed : float = 200
 @export
-var bounce_range : float = 75
+var bounce_range : float = 1
 @export
 var speed_multiplier : float = 1.1
 

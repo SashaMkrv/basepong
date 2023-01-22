@@ -9,6 +9,7 @@ var speed : float = 100
 
 # Returns the angle of the paddle direction from 0,1 in radians
 func get_direction() -> float:
+	print_debug(direction.get_angle_to(Vector2.UP))
 	return direction.get_angle_to(Vector2.UP)
 
 func get_axis() -> Vector2:

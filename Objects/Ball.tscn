@@ -1,0 +1,28 @@
+[gd_scene load_steps=5 format=3 uid="uid://jrr3w0wqyivj"]
+
+[ext_resource type="Script" path="res://Levels/Ball.gd" id="1_yigg0"]
+[ext_resource type="Texture2D" uid="uid://dichrwvhg0kjn" path="res://Assets/circle.svg" id="2_sw7kx"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_i7db3"]
+friction = 0.0
+bounce = 1.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_oy1mo"]
+radius = 7.0
+
+[node name="Ball" type="RigidBody2D" groups=["ball"]]
+editor_description = "i wasn't expecting the rigid body to just whoof through the paddles.... avoided writing simple physics handling myself because i figured the inbuilt ones would handle the old 'too fast for my collisions' problem :sweat_smile:"
+position = Vector2(250, 150)
+collision_layer = 6
+physics_material_override = SubResource("PhysicsMaterial_i7db3")
+gravity_scale = 0.0
+script = ExtResource("1_yigg0")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.75, 0.75)
+texture = ExtResource("2_sw7kx")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_oy1mo")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
