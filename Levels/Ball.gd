@@ -1,4 +1,5 @@
 extends RigidBody2D
+class_name Ball
 
 @export
 var speed : float = 50
@@ -6,6 +7,7 @@ var speed : float = 50
 var bounce_range : float = 75
 
 var original_position : Vector2
+var do_reset : bool = false
 
 
 # Called when the node enters the scene tree for the first time.
@@ -13,12 +15,18 @@ func _ready():
 	original_position = position
 	self.max_contacts_reported = 2
 	self.contact_monitor = true
-	apply_bounce_impulse(Vector2.LEFT)
-	pass # Replace with function body.
 
 
-func reset_position():
-	position = original_position
+func should_reset():
+	do_reset = true
+
+func _integrate_forces(state: PhysicsDirectBodyState2D):
+	if do_reset:
+		do_reset = false
+		state.linear_velocity = Vector2.ZERO
+		state.angular_velocity = 0
+		state.transform.origin = original_position
+
 
 func apply_bounce_impulse(bounce: Vector2):
 	apply_central_impulse(bounce * speed * 2) # to cancel out the original one, I guess.
@@ -29,7 +37,6 @@ func _on_body_entered(body: Node):
 		print_debug("Entered paddle")
 		return
 	if body.is_in_group("goal"):
-		reset_position()
 		print_debug("Entered goal")
 		return
 	print_debug("Entered Something.")

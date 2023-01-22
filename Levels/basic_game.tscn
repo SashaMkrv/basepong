@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://b5jv3e8gj5je7"]
+[gd_scene load_steps=17 format=3 uid="uid://b5jv3e8gj5je7"]
 
 [ext_resource type="PackedScene" uid="uid://c1baxxt8r3a7" path="res://Objects/Paddle.tscn" id="1_7x8ch"]
 [ext_resource type="Texture2D" uid="uid://dichrwvhg0kjn" path="res://Assets/circle.svg" id="1_lw5d6"]
@@ -10,6 +10,9 @@
 [ext_resource type="PackedScene" uid="uid://chicsk124m0bv" path="res://Objects/Goal.tscn" id="6_osljp"]
 [ext_resource type="Script" path="res://Logic/SignalHelper.gd" id="6_p0r1m"]
 [ext_resource type="Script" path="res://Logic/BasicGoalProvider.gd" id="9_wpinb"]
+[ext_resource type="Script" path="res://Logic/GameResetter.gd" id="10_v67ga"]
+[ext_resource type="Script" path="res://Logic/PaddleController.gd" id="12_jwvxq"]
+[ext_resource type="Script" path="res://Logic/GameStarter.gd" id="13_4od7e"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_i7db3"]
 friction = 0.0
@@ -89,12 +92,14 @@ texture = ExtResource("1_lw5d6")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Ball"]
 shape = SubResource("CircleShape2D_oy1mo")
 
-[node name="HomeGoal" parent="." instance=ExtResource("6_osljp")]
+[node name="HomeGoal" parent="." node_paths=PackedStringArray("signal_helper") instance=ExtResource("6_osljp")]
 position = Vector2(550, 150)
+signal_helper = NodePath("../Logic/SignalHelper")
 goal_key = "home"
 
-[node name="VisitingGoal" parent="." instance=ExtResource("6_osljp")]
+[node name="VisitingGoal" parent="." node_paths=PackedStringArray("signal_helper") instance=ExtResource("6_osljp")]
 position = Vector2(-50, 150)
+signal_helper = NodePath("../Logic/SignalHelper")
 goal_key = "visiting"
 
 [node name="BoundaryCollisions" type="Node2D" parent="."]
@@ -111,18 +116,32 @@ position = Vector2(250, 310)
 [node name="CollisionShape2D" type="CollisionShape2D" parent="BoundaryCollisions/LowerBound"]
 shape = SubResource("RectangleShape2D_m80t3")
 
-[node name="BasicGameController" type="Node" parent="." node_paths=PackedStringArray("signalHelper")]
+[node name="Logic" type="Node" parent="."]
+
+[node name="BasicGameController" type="Node" parent="Logic" node_paths=PackedStringArray("signalHelper", "goalGiver", "game_reset")]
 script = ExtResource("5_al00a")
 home_player = ExtResource("3_xp3gn")
 visiting_player = ExtResource("2_bbnqj")
 signalHelper = NodePath("../SignalHelper")
+goalGiver = NodePath("../GoalGiver")
+game_reset = NodePath("../GameReset")
 
-[node name="SignalHelper" type="Node" parent="."]
+[node name="SignalHelper" type="Node" parent="Logic"]
 script = ExtResource("6_p0r1m")
 
-[node name="GameReset" type="Node" parent="."]
+[node name="GameReset" type="Node" parent="Logic" node_paths=PackedStringArray("ball")]
+script = ExtResource("10_v67ga")
+ball = NodePath("../../Ball")
 
-[node name="GoalGiver" type="Node" parent="."]
+[node name="GoalGiver" type="Node" parent="Logic"]
 script = ExtResource("9_wpinb")
+
+[node name="PaddleController" type="Node" parent="Logic" node_paths=PackedStringArray("paddle", "ball")]
+script = ExtResource("12_jwvxq")
+paddle = NodePath("../../VsPlayer")
+ball = NodePath("../../Ball")
+
+[node name="GameStarter" type="Node" parent="Logic"]
+script = ExtResource("13_4od7e")
 
 [connection signal="body_entered" from="Ball" to="Ball" method="_on_body_entered"]
