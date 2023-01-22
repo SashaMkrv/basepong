@@ -137,13 +137,18 @@ ball = NodePath("../../Ball")
 [node name="GoalGiver" type="Node" parent="Logic"]
 script = ExtResource("9_wpinb")
 
-[node name="PaddleController" type="Node" parent="Logic" node_paths=PackedStringArray("paddle", "ball")]
+[node name="AIPaddleController" type="Node" parent="Logic" node_paths=PackedStringArray("paddle", "ball")]
 script = ExtResource("12_jwvxq")
 paddle = NodePath("../../VsPlayer")
 ball = NodePath("../../Ball")
 
 [node name="GameStarter" type="Node" parent="Logic" node_paths=PackedStringArray("ball")]
 script = ExtResource("13_4od7e")
+ball = NodePath("../../Ball")
+
+[node name="MePaddleController" type="Node" parent="Logic" node_paths=PackedStringArray("paddle", "ball")]
+script = ExtResource("12_jwvxq")
+paddle = NodePath("../../HomePlayer")
 ball = NodePath("../../Ball")
 
 [connection signal="body_entered" from="Ball" to="Ball" method="_on_body_entered"]
