@@ -118,13 +118,14 @@ shape = SubResource("RectangleShape2D_m80t3")
 
 [node name="Logic" type="Node" parent="."]
 
-[node name="BasicGameController" type="Node" parent="Logic" node_paths=PackedStringArray("signalHelper", "goalGiver", "game_reset")]
+[node name="BasicGameController" type="Node" parent="Logic" node_paths=PackedStringArray("signalHelper", "goalGiver", "game_reset", "game_start")]
 script = ExtResource("5_al00a")
 home_player = ExtResource("3_xp3gn")
 visiting_player = ExtResource("2_bbnqj")
 signalHelper = NodePath("../SignalHelper")
 goalGiver = NodePath("../GoalGiver")
 game_reset = NodePath("../GameReset")
+game_start = NodePath("../GameStarter")
 
 [node name="SignalHelper" type="Node" parent="Logic"]
 script = ExtResource("6_p0r1m")
@@ -141,7 +142,8 @@ script = ExtResource("12_jwvxq")
 paddle = NodePath("../../VsPlayer")
 ball = NodePath("../../Ball")
 
-[node name="GameStarter" type="Node" parent="Logic"]
+[node name="GameStarter" type="Node" parent="Logic" node_paths=PackedStringArray("ball")]
 script = ExtResource("13_4od7e")
+ball = NodePath("../../Ball")
 
 [connection signal="body_entered" from="Ball" to="Ball" method="_on_body_entered"]
