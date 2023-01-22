@@ -6,6 +6,8 @@
 size = Vector2(5, 75)
 
 [node name="Paddle" type="CharacterBody2D" node_paths=PackedStringArray("direction") groups=["paddle"]]
+motion_mode = 1
+platform_on_leave = 2
 script = ExtResource("1_wg6qd")
 direction = NodePath("RayCast2D")
 

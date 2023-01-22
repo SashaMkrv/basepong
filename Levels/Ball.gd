@@ -13,6 +13,8 @@ var do_reset : bool = false
 
 var current_speed = speed
 
+signal complete_reset()
+
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -30,6 +32,7 @@ func reset_state(state: PhysicsDirectBodyState2D) -> void:
 	state.angular_velocity = 0
 	state.transform.origin = original_position
 	current_speed = speed
+	complete_reset.emit()
 
 func _integrate_forces(state: PhysicsDirectBodyState2D):
 	if do_reset:
