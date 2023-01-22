@@ -14,6 +14,7 @@ radius = 7.0
 editor_description = "i wasn't expecting the rigid body to just whoof through the paddles.... avoided writing simple physics handling myself because i figured the inbuilt ones would handle the old 'too fast for my collisions' problem :sweat_smile:"
 position = Vector2(250, 150)
 collision_layer = 6
+collision_mask = 9
 physics_material_override = SubResource("PhysicsMaterial_i7db3")
 gravity_scale = 0.0
 script = ExtResource("1_yigg0")

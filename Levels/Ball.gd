@@ -4,7 +4,8 @@ class_name Ball
 @export
 var speed : float = 200
 @export
-var bounce_range : float = 1
+#how much of a half-circle around the paddle direction can the ball bounce off in
+var bounce_range : float = 0.5
 @export
 var speed_multiplier : float = 1.1
 
@@ -63,13 +64,13 @@ func _on_body_entered(body: Node):
 	print_debug("Entered Something.")
 
 
-func apply_bounce(body: Paddle):
-	var paddleDir = body.get_direction()
-	var bounceDir = create_bounce_vector()
-	var rotatedDir = bounceDir.rotated(paddleDir)
-	apply_bounce_impulse(rotatedDir)
+func apply_bounce(paddle: Paddle):
+	var bounceDir = create_bounce_vector(paddle.get_direction().normalized())
+	print_debug(bounceDir)
+	apply_bounce_impulse(bounceDir)
 
 
-func create_bounce_vector() -> Vector2:
-	var randomWobble = randf_range(-1 * bounce_range, 1 * bounce_range)
-	return Vector2(randomWobble, 1).normalized()
+func create_bounce_vector(original_vector : Vector2) -> Vector2:
+	var radian_range  = PI * bounce_range
+	var random_rotation = randf_range(-radian_range, radian_range)
+	return original_vector.rotated(random_rotation)

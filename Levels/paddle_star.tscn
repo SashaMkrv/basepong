@@ -1,0 +1,94 @@
+[gd_scene load_steps=6 format=3 uid="uid://dobayea1vvr85"]
+
+[ext_resource type="PackedScene" uid="uid://c1baxxt8r3a7" path="res://Objects/Paddle.tscn" id="1_a8crp"]
+[ext_resource type="PackedScene" uid="uid://jrr3w0wqyivj" path="res://Objects/Ball.tscn" id="2_c6dyl"]
+[ext_resource type="Script" path="res://Logic/PaddleController.gd" id="3_tvati"]
+[ext_resource type="Script" path="res://Logic/BallShootRandomAtReady.gd" id="4_k3ngx"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_jkeoh"]
+size = Vector2(550, 100)
+
+[node name="PaddleStar" type="Node2D"]
+
+[node name="Walls" type="Node2D" parent="."]
+
+[node name="Upper" type="StaticBody2D" parent="Walls"]
+position = Vector2(250, 0)
+collision_layer = 9
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/Upper"]
+shape = SubResource("RectangleShape2D_jkeoh")
+
+[node name="Lower" type="StaticBody2D" parent="Walls"]
+position = Vector2(250, 300)
+collision_layer = 9
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/Lower"]
+shape = SubResource("RectangleShape2D_jkeoh")
+
+[node name="Right" type="StaticBody2D" parent="Walls"]
+position = Vector2(0, 150)
+rotation = 1.5708
+collision_layer = 9
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/Right"]
+shape = SubResource("RectangleShape2D_jkeoh")
+
+[node name="Left" type="StaticBody2D" parent="Walls"]
+position = Vector2(500, 150)
+rotation = 1.5708
+collision_layer = 9
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/Left"]
+shape = SubResource("RectangleShape2D_jkeoh")
+
+[node name="Paddles" type="Node2D" parent="."]
+
+[node name="Paddlevertical" parent="Paddles" instance=ExtResource("1_a8crp")]
+position = Vector2(248, 131)
+
+[node name="Paddlehorizontal" parent="Paddles" instance=ExtResource("1_a8crp")]
+position = Vector2(249, 131)
+rotation = 1.5708
+
+[node name="Paddlediagonalrightdown" parent="Paddles" instance=ExtResource("1_a8crp")]
+position = Vector2(249, 131)
+rotation = -0.785398
+
+[node name="Paddlediagonalleftup" parent="Paddles" instance=ExtResource("1_a8crp")]
+position = Vector2(249, 131)
+rotation = 0.785398
+
+[node name="Ball" parent="." instance=ExtResource("2_c6dyl")]
+position = Vector2(384, 208)
+speed_multiplier = 1.01
+
+[node name="Logic" type="Node" parent="."]
+
+[node name="PaddleHorizController" type="Node" parent="Logic" node_paths=PackedStringArray("paddle", "ball")]
+script = ExtResource("3_tvati")
+paddle = NodePath("../../Paddles/Paddlehorizontal")
+ball = NodePath("../../Ball")
+
+[node name="PaddleVertController" type="Node" parent="Logic" node_paths=PackedStringArray("paddle", "ball")]
+script = ExtResource("3_tvati")
+paddle = NodePath("../../Paddles/Paddlevertical")
+ball = NodePath("../../Ball")
+
+[node name="BallShootAtReady" type="Node" parent="Logic" node_paths=PackedStringArray("ball")]
+script = ExtResource("4_k3ngx")
+ball = NodePath("../../Ball")
+
+[node name="PaddleRightDown" type="Node" parent="Logic" node_paths=PackedStringArray("paddle", "ball")]
+script = ExtResource("3_tvati")
+paddle = NodePath("../../Paddles/Paddlediagonalrightdown")
+ball = NodePath("../../Ball")
+
+[node name="PaddleLeftUp" type="Node" parent="Logic" node_paths=PackedStringArray("paddle", "ball")]
+script = ExtResource("3_tvati")
+paddle = NodePath("../../Paddles/Paddlediagonalleftup")
+ball = NodePath("../../Ball")
